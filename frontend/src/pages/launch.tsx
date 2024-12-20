@@ -1,6 +1,5 @@
 
+
 export default function Launch() {
-    return (
-        <>launch</>
-    )
+  return <>{String.fromCodePoint(0x1f600)}</>;
 }
