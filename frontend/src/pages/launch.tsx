@@ -9,6 +9,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { EmojiStorePicker } from "@/components/customs/emoji-picker";
 import { LaunchFormSchema, LaunchFormSchemaType } from "@/utils/type";
 import { useWriteContract } from "wagmi";
+import { SmartContractConfig } from "@/utils/config";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 export default function Launch() {
   const {
@@ -21,20 +24,31 @@ export default function Launch() {
     resolver: zodResolver(LaunchFormSchema),
   });
 
-  // 取得 emojiCount
   const {
-    data: emojiCountData,
-    isLoading: isCountLoading,
-    isError: isCountError,
-    error: countError,
-  } = useWriteContract({
-    ...SmartContractConfig,
-    functionName: "getEmojiCount",
-  });
+    data: hash,
+    isPending,
+    isSuccess,
+    isError,
+    writeContract,
+  } = useWriteContract();
 
   const onSubmit = (formdata: LaunchFormSchemaType) => {
-    console.log(formdata);
+    writeContract({
+      ...SmartContractConfig,
+      address: SmartContractConfig.address!,
+      functionName: "addEmoji",
+      args: [formdata.emoji, formdata.description, BigInt(formdata.price)],
+    });
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("🚀 Emoji Launched!");
+    }
+    if (isError) {
+      toast.error("❌ launch emoji Failed!");
+    }
+  }, [isError, isSuccess]);
 
   return (
     <Card className="w-[350px]">
@@ -90,7 +104,7 @@ export default function Launch() {
                 {...register("description")}
               />
               {errors.description && (
-                <span className="text-red-500 text-sm">
+                <span className="text-red-500 text-xs">
                   {errors.description.message}
                 </span>
               )}
@@ -102,9 +116,10 @@ export default function Launch() {
             <Button
               variant="outline"
               type="submit"
+              disabled={isPending}
               className="duration-300 hover:text-white hover:bg-gradient-to-r hover:from-indigo-500 hover:via-purple-500 hover:to-pink-500 w-full"
             >
-              Launch 🚀
+              {isPending ? "Launching... 🚀" : "Launch 🚀"}
             </Button>
           </div>
         </form>

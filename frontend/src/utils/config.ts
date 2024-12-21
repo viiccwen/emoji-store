@@ -28,7 +28,7 @@ export const metamask_connector = metaMask({
 
 export const SmartContractConfig: {
   abi: typeof abi;
-  address?: `0x${string}` | undefined
+  address?: `0x${string}`
 } = {
   abi,
   address: `0xFC059Fe6e1ee844E02143Cac536aD994b638c547`,

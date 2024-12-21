@@ -1,9 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { SmartContractConfig } from "@/utils/config";
 import { useEffect, useState } from "react";
 import { useReadContract, useReadContracts } from "wagmi";
@@ -86,12 +82,20 @@ export default function Purchase() {
           <Card key={emoji.id} className="p-4 w-[250px]">
             <CardContent>
               <div className="w-full text-5xl h-[150px] flex justify-center items-center rounded-md bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
-                {String.fromCodePoint(parseInt(emoji.hexCode, 16))}
+                
+                {/* todo: smart contract's problem */}
+                {emoji.hexCode.slice(0, 2) == "0x"
+                  ? String.fromCodePoint(parseInt(emoji.hexCode, 16))
+                  : emoji.hexCode}
               </div>
-              <div className="font-bold mt-5 text-red-500">{emoji.price.toString()} ether</div>
+              <div className="font-bold mt-5 text-red-500">
+                {emoji.price.toString()} ether
+              </div>
               <div>Owner: {emoji.owner.slice(0, 10)}...</div>
               {/* <div>Creator: {emoji.creator.slice(0, 10)}...</div> */}
-              <div className="italic text-slate-500 mt-5">"{emoji.description}"</div>
+              <div className="italic text-slate-500 mt-5">
+                "{emoji.description}"
+              </div>
             </CardContent>
             <CardFooter className="flex justify-center w-full">
               <Button variant="outline" className="w-full">
