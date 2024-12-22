@@ -1,31 +1,19 @@
 import { Button } from "@/components/ui/button";
 import { useAccount, useBalance, useConnect, useDisconnect } from "wagmi";
 import { config, metamask_connector } from "@/utils/config";
-import { formatUnits } from "viem";
 import { toast } from "sonner";
 import { useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { WaitingButton } from "@/components/customs/waiting-button";
 import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
+import { getBalance, walletActions } from "@/utils/utils";
 
 export default function Home() {
   const { connect, isSuccess, isError } = useConnect({ config });
   const { disconnect } = useDisconnect({ config });
   const account = useAccount({ config });
   const balance = useBalance({ address: account.address, config });
-
-  const walletActions = (event_type: "connect" | "disconnect") => {
-    if (event_type === "connect") connect({ connector: metamask_connector });
-    else if (event_type === "disconnect") disconnect();
-  };
-
-  const getBalance = (format_unit: "ether" | "wei") => {
-    const blc = balance.data?.value;
-    if (!blc) return "Balance not found...";
-
-    if (format_unit === "ether") return formatUnits(blc, 18) + " eth";
-    else if (format_unit === "wei") return formatUnits(blc, 0) + " wei";
-  };
 
   useEffect(() => {
     if (isSuccess) {
@@ -44,7 +32,9 @@ export default function Home() {
         {account.isConnected ? (
           <div className="flex flex-col gap-3">
             <span>Connected account: {account.address}</span>
-            <span>Connected Balanced: {getBalance("ether")}</span>
+            <span>
+              Connected Balanced: {getBalance(balance.data?.value, "ether")}
+            </span>
             <div className="flex w-full gap-3">
               <Button linkTo="launch" variant="outline" className="flex-1">
                 上架 🥵
@@ -54,7 +44,14 @@ export default function Home() {
               </Button>
               <Button
                 className="flex-1"
-                onClick={() => walletActions("disconnect")}
+                onClick={() =>
+                  walletActions(
+                    "disconnect",
+                    connect,
+                    disconnect,
+                    metamask_connector
+                  )
+                }
               >
                 斷開鎖鏈 ⛓️‍💥
               </Button>
@@ -63,7 +60,14 @@ export default function Home() {
         ) : account.isConnecting ? (
           <WaitingButton>連接中...</WaitingButton>
         ) : (
-          <Button className="w-full" onClick={() => walletActions("connect")}>
+          <Button
+            className={cn(
+              "w-full bg-emoji font-bold hover:scale-105 duration-300"
+            )}
+            onClick={() =>
+              walletActions("connect", connect, disconnect, metamask_connector)
+            }
+          >
             連接
             <img
               src="/metamask_logo.png"

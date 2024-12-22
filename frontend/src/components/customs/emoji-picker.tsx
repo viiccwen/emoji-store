@@ -19,7 +19,7 @@ export const EmojiStorePicker = (props: EmojiStorePickerProps) => {
   return (
     <div className={cn("relative", props.className)}>
       <button
-        className="w-full text-5xl rounded-lg shadow-lg h-[220px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
+        className="bg-emoji w-full text-5xl rounded-lg shadow-lg h-[220px]"
         onClick={(e) => {
           e.preventDefault();
           setShowEmojiPicker(!showEmojiPicker);

@@ -56,7 +56,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
       >
-        {linkTo ? <NavLink to={linkTo}>{children}</NavLink> : children}
+        {linkTo ? <NavLink className={className} to={linkTo}>{children}</NavLink> : children}
       </Comp>
     );
   }

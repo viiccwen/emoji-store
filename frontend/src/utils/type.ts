@@ -7,3 +7,14 @@ export const LaunchFormSchema = z.object({
 });
 
 export type LaunchFormSchemaType = z.infer<typeof LaunchFormSchema>;
+
+export const EmojiSchema = z.object({
+  id: z.bigint(),
+  hexCode: z.string(),
+  description: z.string(),
+  price: z.bigint(),
+  owner: z.string(),
+  creator: z.string(),
+});
+
+export type EmojiType = z.infer<typeof EmojiSchema>;
