@@ -9,7 +9,7 @@ import { Toaster } from "sonner";
 import About from "./pages/about";
 import Purchase from "./pages/purchase";
 import Launch from "./pages/launch";
-
+  
 const queryClient = new QueryClient();
 
 function App() {
